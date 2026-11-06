@@ -1156,11 +1156,15 @@ Q.addEventListener("input",render); render();
 const mq=matchMedia("(prefers-color-scheme: dark)");(mq.addEventListener?mq.addEventListener("change",drawGeo):mq.addListener(drawGeo));
 new MutationObserver(drawGeo).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 
-/* 사진·지도·리뷰 링크: 안드로이드는 크롬 앱으로 열기(없으면 기본 브라우저). 아이폰·PC는 기본 브라우저 그대로 */
-(()=>{const ua=navigator.userAgent||"";if(!/Android/i.test(ua))return;
+/* 사진·지도·리뷰 링크를 휴대폰에서는 크롬 앱으로 열기 (PC는 기본 브라우저) */
+(()=>{const ua=navigator.userAgent||"";const AND=/Android/i.test(ua);const IOS=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  if(!AND&&!IOS)return;
   document.addEventListener("click",e=>{const a=e.target.closest("a.pbtn");if(!a||!/^https?:/i.test(a.href))return;
     e.preventDefault();const u=a.href,rest=u.replace(/^https?:\/\//i,"");
-    window.open(`intent://${rest}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(u)};end`,"_blank");
+    if(AND){window.open(`intent://${rest}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(u)};end`,"_blank");return;}
+    let left=false;const onHide=()=>{if(document.hidden)left=true;};document.addEventListener("visibilitychange",onHide);
+    window.open((u.startsWith("https")?"googlechromes://":"googlechrome://")+rest,"_blank");
+    setTimeout(()=>{document.removeEventListener("visibilitychange",onHide);if(!left&&!document.hidden)window.open(u,"_blank","noopener");},1500);
   },true);})();
 </script>
 
