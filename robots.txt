@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://seonyudop-collab.github.io/badaji/sitemap.xml
