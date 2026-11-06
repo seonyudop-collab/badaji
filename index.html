@@ -859,6 +859,16 @@ h2{font-family:var(--f-display);font-weight:400;font-size:21px;margin:0 0 8px}
 </style>
 
 <style>
+.row .inl{margin:4px 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:13.5px}
+.row .inl p{margin:0 0 6px}
+.row .inl .tomap{margin-top:8px}
+@media (max-width:860px){
+  .row .item{position:relative}
+  .row .item[aria-expanded]::after{content:"▾";position:absolute;right:6px;top:8px;color:var(--muted);font-size:14px}
+  .row .item[aria-expanded="true"]::after{content:"▴"}
+}
+</style>
+<style>
 .pop details.men{margin-top:2px}
 .pop details.men>summary{cursor:pointer;color:var(--accent);font-size:12.5px;font-weight:600;list-style:none;display:inline-block;padding:2px 0}
 .pop details.men>summary::-webkit-details-marker{display:none}
@@ -1063,6 +1073,10 @@ const HEART_W=0.25;let HEARTS={},MYH=new Set(),hReady=false,hDb=null,hUid=null,h
 const hCount=d=>HEARTS[d.n]||0;
 const heartBtn=d=>{const m=MYH.has(d.n);return `<button type="button" class="hbtn" data-n="${esc(d.n)}" aria-pressed="${m}" aria-label="따봉 ${m?"취소":"누르기"}, 현재 ${hCount(d)}개" title="${m?"따봉 취소":"따봉 누르기"}">${HEART}<b class="hc">${hReady?hCount(d):"·"}</b></button>`;};
 const photoBtns=d=>`<span class="pbtns">${heartBtn(d)}<a class="pbtn map" href="${ggUrl(d)}" target="_blank" rel="noopener">사진</a><a class="pbtn map" href="https://map.naver.com/p/search/${encodeURIComponent(d.nq||d.base)}" target="_blank" rel="noopener">위치</a><a class="pbtn map" href="https://search.naver.com/search.naver?where=blog&query=${encodeURIComponent(d.base+" 백패킹 후기")}" target="_blank" rel="noopener">리뷰</a></span>`;
+function popDetail(d,men,src){return `  <p>${esc(d.note)}</p><div class="meta">${esc(d.tag)}</div>
+  <dl><dt>화장실</dt><dd>${W[d.w]}${d.wBasis?`<br><span class="muted">${esc(d.wBasis)}</span>`:""}</dd><dt>접근성</dt><dd>${esc(d.terr)} · ${esc(d.move)}</dd><dt>박지까지</dt><dd>${esc(d.walk)}</dd><dt>배편</dt><dd>${d.ferry?esc(d.ferry):"없음(육로)"}</dd><dt>경관</dt><dd>${d.sceneTags.length?esc(d.sceneTags.join(" · ")):"-"} (${d.scenePts}/14점)${d.sceneHow?`<br><span class="muted">${esc(d.sceneHow)}</span>`:""}${d.sceneCity?`<br><span class="muted">${esc(d.sceneCity)} 빛공해 반경 안</span>`:""}</dd><dt>1박 요금</dt><dd>${esc(d.fee)}</dd><dt>언급</dt><dd>${d.cnt}곳(가중 ${d.popRaw})${men?`<details class="men"><summary>출처 더보기</summary><div>${men}</div></details>`:""}</dd></dl>
+  <div class="brk"><div class="brk-h">점수 ${d.score.toFixed(1)} 내역</div>${FK.map(k=>`<div class="brk-r"><span>${FL[k]}</span><i><b style="width:${d.sc[k]*100}%"></b></i><em>${Math.round(d.sc[k]*100)}</em></div>`).join("")}</div>
+  ${src?`<p class="meta">정보 출처: ${src}</p>`:""}`;}
 function pop(d){
   const src=(d.src||[]).map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ");
   const men=d.men.map(id=>{const s=SOURCES.find(x=>x.id===id);return s.u?`<a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a>`:esc(s.t)}).join(" · ");
@@ -1073,11 +1087,7 @@ function pop(d){
   <ul class="qf"><li><b>요금</b><span>${esc(d.fee)}</span></li><li><b>가는 길</b><span>${qWay} · 🥾 ${esc(d.walk)}</span></li><li><b>경관</b><span>${d.sceneTags.length?esc(d.sceneTags.join(" · ")):"-"}</span></li></ul>
   <div class="qs">점수 <b>${d.score.toFixed(1)}</b>${FK.map(k=>`<span>${FL[k]} ${Math.round(d.sc[k]*100)}</span>`).join("")}</div>
   ${photoBtns(d)}
-  <details class="more"${wide?" open":""}><summary>자세히 보기</summary>
-  <p>${esc(d.note)}</p><div class="meta">${esc(d.tag)}</div>
-  <dl><dt>화장실</dt><dd>${W[d.w]}${d.wBasis?`<br><span class="muted">${esc(d.wBasis)}</span>`:""}</dd><dt>접근성</dt><dd>${esc(d.terr)} · ${esc(d.move)}</dd><dt>박지까지</dt><dd>${esc(d.walk)}</dd><dt>배편</dt><dd>${d.ferry?esc(d.ferry):"없음(육로)"}</dd><dt>경관</dt><dd>${d.sceneTags.length?esc(d.sceneTags.join(" · ")):"-"} (${d.scenePts}/14점)${d.sceneHow?`<br><span class="muted">${esc(d.sceneHow)}</span>`:""}${d.sceneCity?`<br><span class="muted">${esc(d.sceneCity)} 빛공해 반경 안</span>`:""}</dd><dt>1박 요금</dt><dd>${esc(d.fee)}</dd><dt>언급</dt><dd>${d.cnt}곳(가중 ${d.popRaw})${men?`<details class="men"><summary>출처 더보기</summary><div>${men}</div></details>`:""}</dd></dl>
-  <div class="brk"><div class="brk-h">점수 ${d.score.toFixed(1)} 내역</div>${FK.map(k=>`<div class="brk-r"><span>${FL[k]}</span><i><b style="width:${d.sc[k]*100}%"></b></i><em>${Math.round(d.sc[k]*100)}</em></div>`).join("")}</div>
-  ${src?`<p class="meta">정보 출처: ${src}</p>`:""}</details></div>`;
+  <details class="more"${wide?" open":""}><summary>자세히 보기</summary>${popDetail(d,men,src)}</details></div>`;
 }
 const FK=["pop","scene","acc","wc"];
 const FL={pop:"인기",scene:"경관",acc:"접근성",wc:"화장실"};
@@ -1128,6 +1138,16 @@ document.getElementById("srcs").innerHTML=SOURCES.map(s=>`<li>${s.u?`<a href="${
 
 const Q=document.getElementById("q"),Ls=document.getElementById("list");
 const rm=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* 휴대폰·태블릿 목록: 누르면 지도로 이동하지 않고 그 자리에서 상세 펼치기 */
+const LISTX=()=>innerWidth<=860;const OPENL=new Set();
+function inlineDetail(d){const src=(d.src||[]).map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ");
+  const men=d.men.map(id=>{const s=SOURCES.find(x=>x.id===id);return s.u?`<a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a>`:esc(s.t)}).join(" · ");
+  return `<div class="inl pop">${popDetail(d,men,src)}<button type="button" class="chip plain tomap" data-n="${esc(d.n)}">지도에서 보기</button></div>`;}
+function toggleInline(li,d){const it=li.querySelector(".item");const ex=li.querySelector(".inl");
+  if(ex){ex.remove();OPENL.delete(d.n);it.setAttribute("aria-expanded","false");return;}
+  OPENL.add(d.n);li.insertAdjacentHTML("beforeend",inlineDetail(d));it.setAttribute("aria-expanded","true");}
+document.addEventListener("click",e=>{const b=e.target.closest(".tomap");if(!b)return;const d=SPOTS.find(s=>s.n===b.dataset.n);if(!d)return;
+  map.flyTo([d.lat,d.lng],Math.max(map.getZoom(),9),{duration:rm()?0:.6});setTimeout(()=>d.m.openPopup(),rm()?0:650);document.getElementById("map").scrollIntoView({behavior:rm()?"auto":"smooth",block:"center"});});
 function render(){
   const q=Q.value.trim(); Ls.innerHTML="";
   SPOTS.forEach(d=>{
@@ -1138,7 +1158,9 @@ function render(){
       <span class="bar" aria-label="점수 ${d.score.toFixed(1)}"><i style="width:${Math.max(4,d.score)}%"></i><em>점수 ${d.score.toFixed(1)}</em></span>
       <span class="mini">${FK.map(k=>`<span title="${FL[k]} ${Math.round(d.sc[k]*100)}"><i style="--v:${d.sc[k]}"></i>${FL[k]}</span>`).join("")}</span></span>
       <span class="tags"><span class="pill ${T[d.t].cls}">${T[d.t].label}</span><span class="wc ${d.w==="yes"?"yes":""}">${W[d.w]}</span></span></button>${photoBtns(d)}`;
-    li.querySelector(".item").onclick=()=>{map.flyTo([d.lat,d.lng],Math.max(map.getZoom(),9),{duration:rm()?0:.6});setTimeout(()=>d.m.openPopup(),rm()?0:650);if(innerWidth<=860)document.getElementById("map").scrollIntoView({behavior:rm()?"auto":"smooth",block:"center"});};
+    const it=li.querySelector(".item");
+    if(LISTX()){it.setAttribute("aria-expanded",OPENL.has(d.n));if(OPENL.has(d.n))li.insertAdjacentHTML("beforeend",inlineDetail(d));}
+    it.onclick=()=>{if(LISTX()){toggleInline(li,d);return;}map.flyTo([d.lat,d.lng],Math.max(map.getZoom(),9),{duration:rm()?0:.6});setTimeout(()=>d.m.openPopup(),rm()?0:650);if(innerWidth<=860)document.getElementById("map").scrollIntoView({behavior:rm()?"auto":"smooth",block:"center"});};
     Ls.appendChild(li);
   });
   if(!Ls.children.length) Ls.innerHTML='<li class="note" style="padding:10px 2px">조건에 맞는 스팟이 없습니다. 필터를 켜거나 검색어를 바꿔 보세요.</li>';
