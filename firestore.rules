@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 따봉: 누구나 개수를 볼 수 있고, 로그인한 사람은 자기 문서(=자기 따봉 목록)만 쓸 수 있음
+    match /hearts/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['spots', 't'])
+        && request.resource.data.spots is list
+        && request.resource.data.spots.size() <= 150;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
