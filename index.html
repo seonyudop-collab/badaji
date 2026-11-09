@@ -1213,13 +1213,13 @@ wb.innerHTML=`<i class="mk sm w-yes" style="background:var(--panel)"></i>화장�
 wb.onclick=()=>{wcOnly=!wcOnly;wb.setAttribute("aria-pressed",wcOnly);save();render();};F.appendChild(wb);
 const vb=document.createElement("button");vb.type="button";vb.className="chip wantchip";vb.id="f-want";vb.setAttribute("aria-pressed",visOnly);
 const drawVb=()=>{vb.innerHTML=`<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>찜한 박지 <b>${VIS.size}</b>`;};
-drawVb();vb.onclick=()=>{visOnly=!visOnly;vb.setAttribute("aria-pressed",visOnly);render();};F.appendChild(vb);
+drawVb();vb.onclick=()=>{visOnly=!visOnly;vb.setAttribute("aria-pressed",visOnly);render();};F2.appendChild(vb);
 let likeOnly=false;const lb=document.createElement("button");lb.type="button";lb.className="chip wantchip likechip";lb.id="f-like";lb.setAttribute("aria-pressed",false);
 const drawLb=()=>{lb.innerHTML=`<span class="le" aria-hidden="true">👍</span>좋아요 <b>${hUid?MYH.size:0}</b>`;};
-drawLb();lb.onclick=()=>{likeOnly=!likeOnly;lb.setAttribute("aria-pressed",likeOnly);render();};F.insertBefore(lb,vb);
-const sb=document.createElement("button");sb.type="button";sb.className="chip wantchip seachip";sb.id="f-sea";sb.setAttribute("aria-pressed",false);
-sb.innerHTML=`<span aria-hidden="true">${SEA_EMO[NOW_SEA]}</span> 지금(${NOW_SEA}) 가기 좋은 곳 <b>${SPOTS.filter(d=>d.sea.includes(NOW_SEA)).length}</b>`;
-sb.onclick=()=>{seaOnly=!seaOnly;sb.setAttribute("aria-pressed",seaOnly);render();};F.appendChild(sb);
+drawLb();lb.onclick=()=>{likeOnly=!likeOnly;lb.setAttribute("aria-pressed",likeOnly);render();};F2.insertBefore(lb,vb);
+const sb=document.createElement("button");sb.type="button";sb.className="chip wantchip seachip";sb.id="f-sea";sb.title=`지금(${NOW_SEA}) 가기 좋은 박지`;sb.setAttribute("aria-pressed",false);
+sb.innerHTML=`<span aria-hidden="true">${SEA_EMO[NOW_SEA]}</span> 지금 가기 좋은 곳 <b>${SPOTS.filter(d=>d.sea.includes(NOW_SEA)).length}</b>`;
+sb.onclick=()=>{seaOnly=!seaOnly;sb.setAttribute("aria-pressed",seaOnly);render();};F2.appendChild(sb);F2.hidden=false;
 document.addEventListener("click",e=>{const b=e.target.closest(".vbtn");if(!b)return;e.preventDefault();e.stopPropagation();
   const n=b.dataset.n;VIS.has(n)?VIS.delete(n):VIS.add(n);wantLocal();wantSave();
   const v=VIS.has(n);document.querySelectorAll(".vbtn").forEach(x=>{if(x.dataset.n===n){x.setAttribute("aria-pressed",v);x.title=v?"찜 해제":"나중에 가고 싶은 곳으로 찜";x.setAttribute("aria-label",v?"찜 해제":"가고 싶은 곳 찜");}});
