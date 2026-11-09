@@ -859,6 +859,17 @@ h2{font-family:var(--f-display);font-weight:400;font-size:21px;margin:0 0 8px}
 </style>
 
 <style>
+.wdet{margin-top:8px}.wdet>summary{cursor:pointer;color:var(--muted);font-size:13px;padding:4px 0;list-style:none}.wdet>summary::-webkit-details-marker{display:none}.wdet>summary::before{content:"⚙ ";}.wdet>summary::after{content:" ▾";font-size:11px}.wdet[open]>summary::after{content:" ▴"}
+.row .tags .sea{font-size:12px;letter-spacing:1px;margin-left:2px}
+.chip.seachip[aria-pressed="true"]{border-color:#d97706!important;color:#b45309!important;background:color-mix(in srgb,#f59e0b 14%,transparent)!important}
+.rbtn{margin-top:10px;font:inherit;font-size:12.5px;color:var(--muted);background:none;border:1px dashed var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}.rbtn:hover{color:var(--fg);border-color:var(--muted)}
+.rmodal{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.rmodal[hidden]{display:none}
+.rbox{width:min(440px,100%);background:var(--panel,#fff);color:var(--fg);border-radius:14px;padding:16px 16px 14px;box-shadow:0 10px 40px rgba(0,0,0,.3);max-height:90vh;overflow:auto}
+.rbox h3{margin:0 0 2px;font-size:17px}.rbox .rspot{margin:0 0 10px;color:var(--muted);font-size:13.5px}
+.rtypes{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:10px;font-size:13.5px}.rtypes label{display:flex;gap:4px;align-items:center;cursor:pointer}
+.rbox textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg,#fff);color:var(--fg);resize:vertical}
+.rmsg{min-height:1.2em;margin:6px 0;font-size:13px;color:var(--muted)}.rbtns{display:flex;justify-content:flex-end;gap:8px}.rsend{border-color:#16a34a!important;color:#15803d!important}
+
 .likechip .le{font-size:13px;margin-right:3px;filter:grayscale(1);opacity:.6}.likechip[aria-pressed="true"]{border-color:#3b82f6!important;color:#1d4ed8!important;background:color-mix(in srgb,#3b82f6 12%,transparent)!important}.likechip[aria-pressed="true"] .le{filter:none;opacity:1}
 .chip.wantchip[aria-pressed="false"]{opacity:1}.chip.wantchip svg{color:var(--muted)}.chip.wantchip[aria-pressed="true"]{border-color:#16a34a;color:#15803d;background:color-mix(in srgb,#22c55e 12%,transparent)}.chip.wantchip[aria-pressed="true"] svg{color:#16a34a}
 .wantchip svg{margin-right:3px;vertical-align:-1px}
@@ -964,7 +975,7 @@ h1,.sub{word-break:keep-all}
   <header>
     <div>
       <h1>백패킹 명소 TOP100: 전국 박지 순위</h1>
-      <p class="sub">최근 5년간 추천 글 <b id="nsrc"></b>곳을 분석해 <b>경관·접근성·화장실 유무</b>로 점수를 더해 순위를 매겼습니다. 야영이 금지된 곳은 제외했습니다. 자료는 최신 정보로 계속 업데이트되고 따봉(👍)을 누르면 실시간으로 인기 점수에 반영되어 TOP100 순위와 목록은 바뀔 수 있습니다.</p>
+      <p class="sub">최근 5년간 추천 글 <b>100곳 이상</b>을 분석해서 많이 추천된 박지에 <b>경관, 접근성, 화장실</b> 점수를 더해서 순위를 선정했습니다. 야영이 금지된 곳은 제외했습니다. 자료는 최신 정보로 계속 업데이트되고 따봉(👍)을 누르면 실시간으로 인기 점수에 반영되어 TOP100 순위와 목록은 바뀔 수 있습니다.</p>
     </div>
     <div class="stamp">조사 기준 2026.10</div>
   </header>
@@ -981,8 +992,10 @@ h1,.sub{word-break:keep-all}
         <h2>순위 기준 조절</h2>
         <div class="presets" id="presets"></div>
         <p class="note hidnote" id="hidNote" hidden>숨은 박지: 최근 추천 글 1곳에만 소개된 덜 알려진 박지만 모아 경관 순으로 보여 줍니다(국립공원 명산 제외).</p>
+        <details class="wdet"><summary>직접 조절하기</summary>
         <div class="sliders" id="sliders"></div>
         <p class="note wnote">각 항목 비중은 0~10. 점수는 항목별 0~1 점수의 가중평균 × 100입니다.</p>
+        </details>
       </section>
 
       <section class="card">
@@ -1012,10 +1025,24 @@ h1,.sub{word-break:keep-all}
         <h2>분류 기준</h2>
         <ul class="rules">
           <li><b class="c-camp">공식 야영지</b> 지자체·마을·휴양림·국립공원이 운영하는 야영장, 또는 1박 요금을 받는 곳.</li>
+          <li><b>추천 계절</b> 억새·단풍은 가을, 철쭉·청보리·동백은 봄, 설경·상고대는 겨울, 해수욕장·계곡은 여름처럼 박지 특징과 흔히 찾는 시기를 바탕으로 정한 참고값입니다.</li>
           <li><b class="c-free">노지</b> 공원·보호구역이 아니고 금지 고시도 없어 비화식 백패킹이 관행인 곳. 사유지·해수욕장·하천·도시공원 규정이 걸릴 수 있으니 현장 안내를 확인하세요.</li>
           
           
         </ul>
+      </section>
+
+      <section class="card" id="lnt">
+        <h2>백패킹 매너</h2>
+        <ul class="rules">
+          <li><b>쓰레기는 모두 되가져가기</b> 음식물·휴지·담배꽁초까지 남김없이 챙겨 오세요. 박지가 야영 금지 구역으로 바뀌는 가장 큰 이유가 쓰레기와 민원입니다.</li>
+          <li><b>불 피우지 않기</b> 산과 해안 대부분은 화기 금지 구역입니다. 모닥불·화로대는 쓰지 말고, 버너도 허용된 곳에서만 쓰세요.</li>
+          <li><b>조용히 머물기</b> 밤 10시 이후엔 대화·음악 소리를 줄이고, 마을과 다른 텐트에서 충분히 떨어져 자리 잡으세요.</li>
+          <li><b>자연 훼손하지 않기</b> 데크나 이미 쓰던 자리에 텐트를 치고, 풀·나무를 꺾거나 땅을 파지 마세요.</li>
+          <li><b>화장실은 미리 해결하기</b> 박지에 화장실이 없으면 들머리·선착장에서 해결하고, 필요하면 휴대용 변기 봉투를 챙기세요.</li>
+          <li><b>현장 안내 따르기</b> 출입 통제·야영 금지 안내가 있으면 따르고, 바뀐 정보는 박지의 ‘정보 수정 제보’로 알려 주세요.</li>
+        </ul>
+        <p class="note">흔적 남기지 않기(LNT, Leave No Trace) 원칙을 바탕으로 정리했습니다.</p>
       </section>
 
       <section class="card">
@@ -1040,7 +1067,7 @@ const T = {
   free:{label:"노지",cls:"p-free",c:"--free"}
 };
 const W = {yes:"화장실 있음", trail:"근처(들머리·마을)에만", no:"화장실 없음", unk:"화장실 확인 필요"};
-document.getElementById("nsrc").textContent=SOURCES.length;
+{const e=document.getElementById("nsrc");if(e)e.textContent=SOURCES.length;}
 
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const NARROW=()=>innerWidth<700;
@@ -1087,6 +1114,17 @@ const ringOf=d=>d.w==="yes"?"w-yes":d.w==="trail"?"w-trail":"";
 const PQ={"울릉도 (학포야영장)":"울릉도 학포야영장"};
 const ggUrl=d=>"https://www.google.com/search?tbm=isch&q="+encodeURIComponent((PQ[d.n]||d.base)+" 백패킹");
 let VIS=new Set();try{const v=JSON.parse(localStorage.getItem("bp-want")||"[]");if(Array.isArray(v))VIS=new Set(v);}catch(e){}
+/* 찜: 기기에 저장하고, 로그인하면 계정(data/users/<id>/want)에 함께 저장해 다른 기기와 맞춤 */
+const wantLocal=()=>{try{localStorage.setItem("bp-want",JSON.stringify([...VIS]));}catch(e){}};
+let wSyncT=null;
+function wantSave(){if(!hDb||!hUid)return;clearTimeout(wSyncT);const p="data/users/"+hUid+"/want";wSyncT=setTimeout(()=>{hDb.doc(p).set({spots:[...VIS].slice(0,150),t:Date.now()}).catch(()=>{});},400);}
+function wantRefresh(){document.querySelectorAll(".vbtn").forEach(x=>{const v=VIS.has(x.dataset.n);x.setAttribute("aria-pressed",v);x.title=v?"찜 해제":"나중에 가고 싶은 곳으로 찜";x.setAttribute("aria-label",v?"찜 해제":"가고 싶은 곳 찜");});
+  if(typeof SPOTS!=="undefined")SPOTS.forEach(d=>d.m&&d.m.setIcon&&d.m.setIcon(iconOf(d)));if(typeof drawVb==="function")drawVb();if(typeof render==="function"&&typeof visOnly!=="undefined"&&visOnly)render();}
+async function wantLoad(){if(!hDb||!hUid)return;const uid=hUid;try{const s=await hDb.doc("data/users/"+uid+"/want").get();if(uid!==hUid)return;
+  const remote=s.exists&&s.data()&&Array.isArray(s.data().spots)?s.data().spots.filter(x=>typeof x==="string"):[];
+  let merged=false;try{merged=localStorage.getItem("bp-want-m:"+uid)==="1";}catch(e){}
+  if(merged){VIS=new Set(remote);}else{VIS=new Set([...remote,...VIS]);try{localStorage.setItem("bp-want-m:"+uid,"1");}catch(e){}if(VIS.size!==remote.length)wantSave();}
+  wantLocal();wantRefresh();}catch(e){}}
 const FLAG=`<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle class="fl" cx="12" cy="12" r="9"/><path class="pl" d="M7.6 12.4l3 3 5.8-6.4" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const visBtn=d=>{const v=VIS.has(d.n);return `<button type="button" class="vbtn" data-n="${esc(d.n)}" aria-pressed="${v}" title="${v?"찜 해제":"나중에 가고 싶은 곳으로 찜"}" aria-label="${v?"찜 해제":"가고 싶은 곳 찜"}">${FLAG}<span>찜</span></button>`;};
 const HEART=`<span class="te" aria-hidden="true">👍</span>`;
@@ -1100,7 +1138,8 @@ const photoBtns=d=>`<span class="pbtns">${heartBtn(d)}${visBtn(d)}<a class="pbtn
 function popDetail(d,men,src){return `  <p>${esc(d.note)}</p><div class="meta">${esc(d.tag)}</div>
   <dl><dt>화장실</dt><dd>${W[d.w]}${d.wBasis?`<br><span class="muted">${esc(d.wBasis)}</span>`:""}</dd><dt>접근성</dt><dd>${esc(d.terr)} · ${esc(d.move)}</dd><dt>박지까지</dt><dd>${esc(d.walk)}</dd><dt>배편</dt><dd>${d.ferry?esc(d.ferry):"없음(육로)"}</dd><dt>경관</dt><dd>${d.sceneTags.length?esc(d.sceneTags.join(" · ")):"-"} (${d.scenePts}/10점)${d.sceneHow?`<br><span class="muted">${esc(d.sceneHow)}</span>`:""}${d.sceneCity?`<br><span class="muted">${esc(d.sceneCity)} 빛공해 반경 안</span>`:""}</dd><dt>1박 요금</dt><dd>${esc(d.fee)}</dd><dt>언급</dt><dd>${d.cnt}곳(가중 ${d.popRaw})${men?`<details class="men"><summary>출처 더보기</summary><div>${men}</div></details>`:""}</dd></dl>
   <div class="brk"><div class="brk-h">점수 ${d.score.toFixed(1)} 내역</div>${FK.map(k=>`<div class="brk-r"><span>${FL[k]}</span><i><b style="width:${d.sc[k]*100}%"></b></i><em>${Math.round(d.sc[k]*100)}</em></div>`).join("")}</div>
-  ${src?`<p class="meta">정보 출처: ${src}</p>`:""}`;}
+  ${src?`<p class="meta">정보 출처: ${src}</p>`:""}
+  <button type="button" class="rbtn" data-n="${esc(d.n)}">✏️ 정보 수정 제보</button>`;}
 function pop(d){
   const src=(d.src||[]).map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${esc(t)}</a>`).join(" · ");
   const men=d.men.map(id=>{const s=SOURCES.find(x=>x.id===id);return s.u?`<a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a>`:esc(s.t)}).join(" · ");
@@ -1108,7 +1147,7 @@ function pop(d){
   const qWay=d.ferry?`⛴ ${esc(d.ferry)}`:`🚗 육로`;
   return `<div class="pop"><span class="pill ${T[d.t].cls}">${T[d.t].label}</span> <span class="wc ${d.w==="yes"?"yes":""}">${W[d.w]}</span>
   <h3><span class="num">${d.rank}위</span> ${esc(d.n)}</h3><div class="meta">${KINDS[d.kind]} ${d.krank}위 · ${esc(d.r)}</div>
-  <ul class="qf"><li><b>요금</b><span>${esc(d.fee)}</span></li><li><b>가는 길</b><span>${qWay} · 🥾 ${esc(d.walk)}</span></li><li><b>경관</b><span>${d.sceneTags.length?esc(d.sceneTags.join(" · ")):"-"}</span></li></ul>
+  <ul class="qf"><li><b>요금</b><span>${esc(d.fee)}</span></li><li><b>가는 길</b><span>${qWay} · 🥾 ${esc(d.walk)}</span></li><li><b>경관</b><span>${d.sceneTags.length?esc(d.sceneTags.join(" · ")):"-"}</span></li><li><b>계절</b><span>${seaTxt(d)}</span></li></ul>
   <div class="qs">점수 <b>${d.score.toFixed(1)}</b>${FK.map(k=>`<span>${FL[k]} ${Math.round(d.sc[k]*100)}</span>`).join("")}</div>
   ${photoBtns(d)}
   <details class="more"${wide?" open":""}><summary>자세히 보기</summary>${popDetail(d,men,src)}</details></div>`;
@@ -1150,6 +1189,16 @@ document.getElementById("legend").innerHTML=Object.keys(T).map(k=>`<span><i clas
 const on={camp:true,free:true,cond:true,np:true,no:true}; let wcOnly=false, topN=100, visOnly=false;
 try{const sv=JSON.parse(localStorage.getItem("bp4")||"null");if(sv){Object.assign(on,sv.on||{});wcOnly=!!sv.wc;topN=100;}}catch(e){}
 const save=()=>{try{localStorage.setItem("bp4",JSON.stringify({on,wc:wcOnly,top:topN}))}catch(e){}};
+const SEA_ORD=["봄","여름","가을","겨울"],SEA_EMO={봄:"🌸",여름:"🌊",가을:"🍂",겨울:"❄️"};
+const SEASON={"굴업도 (개머리언덕)":["봄","가을"],"선자령":["겨울"],"대이작도 (작은풀안해변)":["여름"],"우도 비양도 야영지":["봄","가을"],"덕적도 (서포리·밧지름)":["여름"],"강천섬 캠핑장":["가을"],"무의도 무렝게티":["가을"],"신불산폭포휴양림 상단 백패킹장":["가을"],"석모도 민머루해변":["가을"],"화성 궁평항":["가을"],"울릉도 (학포야영장)":["여름"],"노고산":["가을"],"승봉도 이일레해변":["여름"],"장봉도 가막머리 전망대":["가을"],"가평 호명산":["여름"],"무의도 국사봉":["가을"],"여수 하화도 야생화공원":["봄"],"평창 산너미목장":["여름","가을"],"홍성 죽도 야영지":["가을"],"매봉산 천상의숲 숲속야영장":["여름"],"울릉도 구암 국민여가캠핑장":["여름"],"무의도 호룡곡산 능선":["가을"],"설악산":["가을"],"서울 노을캠핑장":["가을"],"태기산":["겨울"],"소매물도":["봄"],"덕유산":["겨울"],"소백산":["봄","겨울"],"지리산":["가을"],"가야산":["가을"],"태백산":["겨울"],"월출산":["가을"],"팔영산":["가을"],"청산도":["봄"],"금오도":["봄","가을"],"국립 방태산자연휴양림 야영장":["여름","가을"],"국립 미천골자연휴양림 야영장":["여름","가을"],"교동도":["가을"],"강화 동검도":["가을"],"태안 마도 해안절벽":["가을"],"군산 선유봉":["여름","가을"]};
+function seasonsOf(d){if(SEASON[d.n])return SEASON[d.n];const t=d.n+" "+d.tag+" "+d.note,s=new Set();
+  if(/청보리|철쭉|진달래|벚꽃|유채|동백/.test(t))s.add("봄");if(/해수욕장|계곡|물놀이/.test(t))s.add("여름");if(/억새|단풍/.test(t))s.add("가을");if(/설경|눈꽃|상고대/.test(t))s.add("겨울");
+  if(!s.size){if(d.kind==="forest"||d.kind==="river"){s.add("여름");s.add("가을");}else if(d.kind==="isl"&&/해변|해수욕/.test(t)){s.add("여름");s.add("가을");}else{s.add("봄");s.add("가을");}}
+  return SEA_ORD.filter(x=>s.has(x));}
+SPOTS.forEach(d=>{d.sea=seasonsOf(d);});
+const seaTxt=d=>d.sea.map(x=>SEA_EMO[x]+" "+x).join(" · ");
+const NOW_SEA=(m=>m>=3&&m<=5?"봄":m>=6&&m<=8?"여름":m>=9&&m<=11?"가을":"겨울")(new Date().getMonth()+1);
+let seaOnly=false;
 const F=document.getElementById("filters"),F2=document.getElementById("filters2");
 Object.keys(T).forEach(k=>{const b=document.createElement("button");b.type="button";b.className="chip";b.id="f-"+k;
   b.innerHTML=`<i class="mk sm" style="background:var(${T[k].c})"></i>${T[k].label} <b>${SPOTS.filter(d=>d.t===k).length}</b>`;
@@ -1164,8 +1213,11 @@ drawVb();vb.onclick=()=>{visOnly=!visOnly;vb.setAttribute("aria-pressed",visOnly
 let likeOnly=false;const lb=document.createElement("button");lb.type="button";lb.className="chip wantchip likechip";lb.id="f-like";lb.setAttribute("aria-pressed",false);
 const drawLb=()=>{lb.innerHTML=`<span class="le" aria-hidden="true">👍</span>좋아요 <b>${hUid?MYH.size:0}</b>`;};
 drawLb();lb.onclick=()=>{likeOnly=!likeOnly;lb.setAttribute("aria-pressed",likeOnly);render();};F.insertBefore(lb,vb);
+const sb=document.createElement("button");sb.type="button";sb.className="chip wantchip seachip";sb.id="f-sea";sb.setAttribute("aria-pressed",false);
+sb.innerHTML=`<span aria-hidden="true">${SEA_EMO[NOW_SEA]}</span> 지금(${NOW_SEA}) 가기 좋은 곳 <b>${SPOTS.filter(d=>d.sea.includes(NOW_SEA)).length}</b>`;
+sb.onclick=()=>{seaOnly=!seaOnly;sb.setAttribute("aria-pressed",seaOnly);render();};F.appendChild(sb);
 document.addEventListener("click",e=>{const b=e.target.closest(".vbtn");if(!b)return;e.preventDefault();e.stopPropagation();
-  const n=b.dataset.n;VIS.has(n)?VIS.delete(n):VIS.add(n);try{localStorage.setItem("bp-want",JSON.stringify([...VIS]));}catch(err){}
+  const n=b.dataset.n;VIS.has(n)?VIS.delete(n):VIS.add(n);wantLocal();wantSave();
   const v=VIS.has(n);document.querySelectorAll(".vbtn").forEach(x=>{if(x.dataset.n===n){x.setAttribute("aria-pressed",v);x.title=v?"찜 해제":"나중에 가고 싶은 곳으로 찜";x.setAttribute("aria-label",v?"찜 해제":"가고 싶은 곳 찜");}});
   const d=SPOTS.find(s=>s.n===n);if(d)d.m.setIcon(iconOf(d));drawVb();if(visOnly&&!v){d&&d.m.closePopup();render();}},true);
 
@@ -1193,13 +1245,13 @@ document.addEventListener("click",e=>{const b=e.target.closest(".tomap");if(!b)r
 function render(){
   const q=Q.value.trim(); Ls.innerHTML="";
   SPOTS.forEach(d=>{
-    const vis=(!HIDDEN||isHid(d))&&(KIND==="all"||d.kind===KIND)&&dr(d)<=topN&&on[d.t]&&(!wcOnly||d.w==="yes")&&(!visOnly||VIS.has(d.n))&&(!likeOnly||(hUid&&MYH.has(d.n)))&&(!q||(d.n+d.r+d.tag+T[d.t].label).includes(q));
+    const vis=(!HIDDEN||isHid(d))&&(KIND==="all"||d.kind===KIND)&&dr(d)<=topN&&on[d.t]&&(!wcOnly||d.w==="yes")&&(!visOnly||VIS.has(d.n))&&(!likeOnly||(hUid&&MYH.has(d.n)))&&(!seaOnly||d.sea.includes(NOW_SEA))&&(!q||(d.n+d.r+d.tag+T[d.t].label).includes(q));
     vis?d.m.addTo(map):d.m.remove(); if(!vis) return;
     const li=document.createElement("li");li.className="row";
     li.innerHTML=`<button type="button" class="item"><span class="rk">${dr(d)}${KIND==="all"?"":`<small>전체 ${HIDDEN?d.hrank:d.rank}</small>`}</span><span class="body"><span class="nm">${esc(d.n)}</span><span class="rg">${esc(d.r)} · ${KINDS[d.kind]} · ${esc(d.tag)}</span><span class="trip">${d.ferry?`<span><b>배</b> ${esc(d.ferry)}</span>`:""}<span><b>도보</b> ${esc(d.walk)}</span></span>${d.paid?`<span class="fee">1박 ${esc(d.fee)}</span>`:""}
       <span class="bar" aria-label="점수 ${d.score.toFixed(1)}"><i style="width:${Math.max(4,d.score)}%"></i><em>점수 ${d.score.toFixed(1)}</em></span>
       <span class="mini">${FK.map(k=>`<span title="${FL[k]} ${Math.round(d.sc[k]*100)}"><i style="--v:${d.sc[k]}"></i>${FL[k]}</span>`).join("")}</span></span>
-      <span class="tags"><span class="pill ${T[d.t].cls}">${T[d.t].label}</span><span class="wc ${d.w==="yes"?"yes":""}">${W[d.w]}</span></span></button>${photoBtns(d)}`;
+      <span class="tags"><span class="pill ${T[d.t].cls}">${T[d.t].label}</span><span class="wc ${d.w==="yes"?"yes":""}">${W[d.w]}</span><span class="sea" title="추천 계절: ${d.sea.join("·")}">${d.sea.map(x=>SEA_EMO[x]).join("")}</span></span></button>${photoBtns(d)}`;
     const it=li.querySelector(".item");
     if(LISTX()){it.setAttribute("aria-expanded",OPENL.has(d.n));if(OPENL.has(d.n))li.insertAdjacentHTML("beforeend",inlineDetail(d));}
     it.onclick=()=>{if(LISTX()){toggleInline(li,d);return;}map.flyTo([d.lat,d.lng],Math.max(map.getZoom(),9),{duration:rm()?0:.6});setTimeout(()=>d.m.openPopup(),rm()?0:650);if(innerWidth<=860)document.getElementById("map").scrollIntoView({behavior:rm()?"auto":"smooth",block:"center"});};
@@ -1248,13 +1300,40 @@ let hStarted=false;
 async function hInit(){if(hStarted)return;hStarted=true;try{
   const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
   if(!db||!user){hMsg("따봉은 로그인한 상태에서 볼 수 있어요.");return;}
-  hDb=db;hUser=user;hUid=await user.id();
+  hDb=db;hUser=user;hUid=await user.id();if(hUid)wantLoad();
   const can=user.can?await user.can("data.write"):null;if(can===false)hCanWrite=false;
-  if(user.onChange)user.onChange(uid=>{hUid=uid||null;hCanWrite=true;if(hLast)hProcess(hLast);else heartsChanged();hAuthUI();});
+  if(user.onChange)user.onChange(uid=>{hUid=uid||null;hCanWrite=true;if(hUid)wantLoad();if(hLast)hProcess(hLast);else heartsChanged();hAuthUI();});
   hAuthUI();
   hTm=setTimeout(()=>{if(!hReady)hMsg("따봉 정보를 아직 불러오지 못했어요.");},10000);
   db.collection("hearts").onSnapshot(hProcess,e=>{clearTimeout(hTm);hMsg("따봉 정보를 불러오지 못했어요.");});
 }catch(e){}}
+
+/* 정보 수정 제보: 로그인한 사람의 제보를 reports/<id> 문서에 모음(운영자만 전체 열람) */
+(function(){
+  const M=document.createElement("div");M.className="rmodal";M.id="rModal";M.hidden=true;
+  M.innerHTML=`<div class="rbox" role="dialog" aria-modal="true" aria-labelledby="rTitle"><h3 id="rTitle">정보 수정 제보</h3><p class="rspot" id="rSpot"></p>
+  <div class="rtypes" role="radiogroup" aria-label="제보 종류">${["야영 금지·통제","화장실","요금","가는 길·배편","지도 위치","기타"].map((t,i)=>`<label><input type="radio" name="rtype" value="${t}"${i===0?" checked":""}> ${t}</label>`).join("")}</div>
+  <textarea id="rText" maxlength="500" rows="4" placeholder="바뀐 내용을 적어 주세요. 확인한 날짜나 출처(안내판·기사 링크 등)가 있으면 함께 적어 주시면 좋아요."></textarea>
+  <p class="rmsg" id="rMsg" role="status"></p>
+  <div class="rbtns"><button type="button" class="chip plain" id="rCancel">닫기</button><button type="button" class="chip rsend" id="rSend">보내기</button></div></div>`;
+  document.body.appendChild(M);
+  let cur=null;const $=id=>document.getElementById(id);
+  const close=()=>{M.hidden=true;cur=null;};
+  const open=n=>{cur=n;$("rSpot").textContent=n;$("rText").value="";$("rMsg").textContent=hUid?"":"제보는 로그인한 상태에서 보낼 수 있어요.";$("rSend").disabled=false;M.hidden=false;setTimeout(()=>$("rText").focus(),30);};
+  document.addEventListener("click",e=>{const b=e.target.closest(".rbtn");if(!b)return;e.preventDefault();e.stopPropagation();open(b.dataset.n);},true);
+  M.addEventListener("click",e=>{if(e.target===M)close();});
+  $("rCancel").onclick=close;
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!M.hidden)close();});
+  $("rSend").onclick=async()=>{const txt=$("rText").value.trim();const type=(M.querySelector('input[name="rtype"]:checked')||{}).value||"기타";
+    if(!txt){$("rMsg").textContent="바뀐 내용을 한 줄이라도 적어 주세요.";return;}
+    if(hDb&&!hUid&&hUser&&hUser.signIn){$("rMsg").textContent="로그인 창을 열었어요. 로그인 후 다시 보내기를 눌러 주세요.";hUser.signIn().catch(()=>{$("rMsg").textContent="로그인하지 못했어요.";});return;}
+    if(!hDb||!hUid){$("rMsg").textContent="제보는 로그인한 상태에서 보낼 수 있어요.";return;}
+    $("rSend").disabled=true;$("rMsg").textContent="보내는 중…";
+    try{const ref=hDb.doc("reports/"+hUid);let items=[];try{const g=await ref.get();if(g.exists&&g.data()&&Array.isArray(g.data().items))items=g.data().items;}catch(_){}
+      items=items.concat([{n:cur,type,text:txt.slice(0,500),at:Date.now()}]).slice(-50);
+      await ref.set({items,t:Date.now()});$("rMsg").textContent="고마워요! 제보가 접수됐어요. 확인 후 반영할게요.";setTimeout(close,1600);}
+    catch(e){$("rSend").disabled=false;$("rMsg").textContent="보내지 못했어요. 잠시 후 다시 시도해 주세요.";}};
+})();
 if(typeof claude!=="undefined"&&claude&&claude.use)hInit();else addEventListener("bp-backend",hInit);
 let hPending=false,hDirty=false;
 async function hWrite(){if(hPending){hDirty=true;return;}hPending=true;
